@@ -34,7 +34,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/release_date_text"
+            android:id="@+id/artist_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"

@@ -12,36 +12,32 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    val API_KEY = "25611267ecba2d97519b04498964b070"
-    val BASE_URL = "https://api.themoviedb.org/3/"
-    val LATEST_MOVIES_ENDPOINT = "movie/popular"
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val url = BASE_URL + LATEST_MOVIES_ENDPOINT
-
         val parameters = listOf(
-                Pair("api_key", API_KEY),
-                Pair("language", "es"),
+                Pair("method", "geo.gettoptracks"),
+                Pair("country", "india"),
+                Pair("api_key", "0d6815b4c3f6ba69c7fc40739a09d552"),
+                Pair("format", "json"),
         )
-        url.httpGet(parameters).response {
-            request, response, result ->
+
+        LAST_FM_BASE_URL.httpGet(parameters).response { request, response, result ->
             Log.d("Result", "Response: ${result.component1()?.decodeToString()}, Error : ${result.component2()?.exception?.message}, ${result.component2()?.response?.data?.decodeToString()}")
 
-            if(result.component1() != null) {
+            if (result.component1() != null) {
                 //Parse Response Json to PopularMoviesResponse object
                 val gson = Gson()
-                val type = object : TypeToken<PopularMoviesResponse>() {}.type
-                val popularMoviesResponse = gson.fromJson<PopularMoviesResponse>(result.component1()?.decodeToString(), type)
+                val type = object : TypeToken<TopTracksResponse>() {}.type
+                val popularMoviesResponse = gson.fromJson<TopTracksResponse>(result.component1()?.decodeToString(), type)
 
                 //Display movies in RecyclerView
-                movieItemsRv.adapter = MovieListItemAdapter(popularMoviesResponse.results
+                movieItemsRv.adapter = TracksListAdapter(popularMoviesResponse.tracks?.track
                         ?: arrayListOf())
                 movieItemsRv.layoutManager = GridLayoutManager(this, 3)
                 Log.d("Result", "After deserialize: $popularMoviesResponse")
-            } else{
+            } else {
                 Toast.makeText(this, "Error getting response", Toast.LENGTH_SHORT).show()
             }
         }

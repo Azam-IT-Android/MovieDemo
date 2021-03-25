@@ -1,6 +1,7 @@
 package com.example.moviedemo
 
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -18,6 +19,14 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val intentFilter = IntentFilter()
+        intentFilter.addAction("android.intent.action.ACTION_POWER_CONNECTED")
+        intentFilter.addAction("android.intent.action.ACTION_POWER_DISCONNECTED")
+
+        registerReceiver(ChargingReceiver(), intentFilter)
+
+
 
         val url = BASE_URL + LATEST_MOVIES_ENDPOINT
 
@@ -48,5 +57,7 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "Error getting response", Toast.LENGTH_SHORT).show()
             }
         }
+
+
     }
 }

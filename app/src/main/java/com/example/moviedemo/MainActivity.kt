@@ -1,5 +1,6 @@
 package com.example.moviedemo
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -12,8 +13,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    val API_KEY = "25611267ecba2d97519b04498964b070"
-    val BASE_URL = "https://api.themoviedb.org/3/"
     val LATEST_MOVIES_ENDPOINT = "movie/popular"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +37,11 @@ class MainActivity : AppCompatActivity() {
 
                 //Display movies in RecyclerView
                 movieItemsRv.adapter = MovieListItemAdapter(popularMoviesResponse.results
-                        ?: arrayListOf())
+                        ?: arrayListOf()){
+                    val intent = Intent(this, MovieDetailActivity::class.java)
+                    intent.putExtra("id", it.id)
+                    startActivity(intent)
+                }
                 movieItemsRv.layoutManager = GridLayoutManager(this, 3)
                 Log.d("Result", "After deserialize: $popularMoviesResponse")
             } else{
